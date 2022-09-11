@@ -89,4 +89,12 @@ defmodule FlowTimerWeb.Router do
     get "/users/confirm/:token", UserConfirmationController, :edit
     post "/users/confirm/:token", UserConfirmationController, :update
   end
+
+  live_session :default, on_mount: FlowTimerWeb.UserLiveAuth do
+    scope "/", FlowTimerWeb do
+      pipe_through [:browser, :require_authenticated_user]
+
+      live "/timer", TimerLive
+    end
+  end
 end

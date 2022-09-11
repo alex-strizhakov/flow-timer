@@ -6,6 +6,7 @@ defmodule FlowTimer.FocusSessions do
   import Ecto.Query, warn: false
   alias FlowTimer.Repo
 
+  alias FlowTimer.Accounts.User
   alias FlowTimer.FocusSessions.FocusSession
 
   @doc """
@@ -19,6 +20,44 @@ defmodule FlowTimer.FocusSessions do
   """
   def list_focus_sessions do
     Repo.all(FocusSession)
+  end
+
+  defp today_midnight, do: NaiveDateTime.new!(Date.utc_today(), Time.new!(0, 0, 0))
+  @spec list_today_finished_sessions(User.t()) :: [FocusSession.t()]
+  def list_today_finished_sessions(%User{id: user_id}) do
+    query =
+      from fs in FocusSession,
+        join: t in assoc(fs, :task),
+        preload: [task: t],
+        where: t.user_id == ^user_id,
+        where: fs.inserted_at >= ^today_midnight(),
+        where: not is_nil(fs.finished_at),
+        order_by: [desc: fs.inserted_at]
+
+    Repo.all(query)
+  end
+
+  @spec get_active_focus_session(User.t()) :: FocusSession.t() | nil
+  def get_active_focus_session(%User{id: user_id}) do
+    query =
+      from fs in FocusSession,
+        join: t in assoc(fs, :task),
+        preload: [task: t],
+        where: t.user_id == ^user_id,
+        where: fs.inserted_at >= ^today_midnight(),
+        where: is_nil(fs.finished_at),
+        limit: 1
+
+    Repo.one(query)
+  end
+
+  @spec session_duration(FocusSession.t()) :: non_neg_integer()
+  def session_duration(%FocusSession{finished_at: %NaiveDateTime{} = finished_at} = session) do
+    NaiveDateTime.diff(finished_at, session.inserted_at)
+  end
+
+  def session_duration(%FocusSession{} = session) do
+    NaiveDateTime.diff(NaiveDateTime.utc_now(), session.inserted_at)
   end
 
   @doc """

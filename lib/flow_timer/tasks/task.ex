@@ -4,7 +4,8 @@ defmodule FlowTimer.Tasks.Task do
 
   schema "tasks" do
     field :title, :string
-    field :user_id, :id
+
+    belongs_to :user, FlowTimer.Accounts.User
 
     timestamps()
   end
@@ -12,7 +13,8 @@ defmodule FlowTimer.Tasks.Task do
   @doc false
   def changeset(task, attrs) do
     task
-    |> cast(attrs, [:title])
-    |> validate_required([:title])
+    |> cast(attrs, [:title, :user_id])
+    |> validate_required([:user_id])
+    |> foreign_key_constraint(:user_id)
   end
 end
