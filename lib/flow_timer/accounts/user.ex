@@ -10,6 +10,8 @@ defmodule FlowTimer.Accounts.User do
     field :hashed_password, :string, redact: true
     field :confirmed_at, :naive_datetime
 
+    embeds_many :break_settings, FlowTimer.Breaks.Setting, on_replace: :delete
+
     timestamps()
   end
 
@@ -35,6 +37,7 @@ defmodule FlowTimer.Accounts.User do
     |> cast(attrs, [:email, :password])
     |> validate_email()
     |> validate_password(opts)
+    |> cast_embed(:break_settings)
   end
 
   defp validate_email(changeset) do

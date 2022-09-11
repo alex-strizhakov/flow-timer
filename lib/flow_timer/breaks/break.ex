@@ -2,9 +2,13 @@ defmodule FlowTimer.Breaks.Break do
   use Ecto.Schema
   import Ecto.Changeset
 
+  @type t :: %__MODULE__{}
+
   schema "breaks" do
     field :finished_at, :naive_datetime
-    field :focus_session_id, :id
+    field :finished, :boolean, default: false
+
+    belongs_to :focus_session, FlowTimer.FocusSessions.FocusSession
 
     timestamps()
   end
@@ -12,7 +16,7 @@ defmodule FlowTimer.Breaks.Break do
   @doc false
   def changeset(break, attrs) do
     break
-    |> cast(attrs, [:finished_at])
-    |> validate_required([:finished_at])
+    |> cast(attrs, [:finished_at, :focus_session_id, :finished])
+    |> validate_required([:focus_session_id, :finished_at])
   end
 end

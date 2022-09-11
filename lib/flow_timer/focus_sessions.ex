@@ -28,7 +28,8 @@ defmodule FlowTimer.FocusSessions do
     query =
       from fs in FocusSession,
         join: t in assoc(fs, :task),
-        preload: [task: t],
+        join: b in assoc(fs, :break),
+        preload: [task: t, break: b],
         where: t.user_id == ^user_id,
         where: fs.inserted_at >= ^today_midnight(),
         where: not is_nil(fs.finished_at),

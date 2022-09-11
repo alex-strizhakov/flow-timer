@@ -7,6 +7,7 @@ defmodule FlowTimer.FocusSessions.FocusSession do
     field :finished_at, :naive_datetime
     field :number, :integer
     belongs_to :task, FlowTimer.Tasks.Task
+    has_one :break, FlowTimer.Breaks.Break
 
     timestamps()
   end

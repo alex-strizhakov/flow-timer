@@ -4,6 +4,7 @@ defmodule FlowTimer.Repo.Migrations.CreateBreaks do
   def change do
     create table(:breaks) do
       add :finished_at, :naive_datetime
+      add :finished, :boolean
       add :focus_session_id, references(:focus_sessions, on_delete: :nothing)
 
       timestamps()
