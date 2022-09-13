@@ -146,11 +146,21 @@ defmodule FlowTimerWeb.TimerLive do
     break = Breaks.get_break!(break_id)
 
     socket =
-      case Breaks.update_break(break, %{finished: true}) do
-        {:ok, _} ->
+      case Breaks.update_break(break, %{finished_at: NaiveDateTime.utc_now(), finished: true}) do
+        {:ok, updated_break} ->
           %{timer_ref: timer_ref} = socket.assigns
           {:ok, _} = :timer.cancel(timer_ref)
-          assign(socket, timer: nil, break: nil, timer_ref: nil)
+
+          socket
+          |> assign(timer: nil, break: nil, timer_ref: nil)
+          |> update(:finished_sessions, fn sessions ->
+            reloaded_session =
+              updated_break.focus_session_id
+              |> FocusSessions.get_focus_session!()
+              |> FlowTimer.Repo.preload([:task, :break])
+
+            [reloaded_session | sessions]
+          end)
 
         error ->
           Logger.error(inspect(error))
@@ -174,10 +184,24 @@ defmodule FlowTimerWeb.TimerLive do
     {:noreply, assign(socket, timer: timer)}
   end
 
-  def handle_info(:stop_break, socket) do
+  def handle_info({:stop_break, break_id}, socket) do
+    break = Breaks.get_break!(break_id)
+    {:ok, updated_break} = Breaks.update_break(break, %{finished: true})
     %{timer_ref: timer_ref} = socket.assigns
     {:ok, _} = :timer.cancel(timer_ref)
-    socket = assign(socket, timer: nil, break: nil, timer_ref: nil)
+
+    socket =
+      socket
+      |> assign(timer: nil, break: nil, timer_ref: nil)
+      |> update(:finished_sessions, fn sessions ->
+        reloaded_session =
+          updated_break.focus_session_id
+          |> FocusSessions.get_focus_session!()
+          |> FlowTimer.Repo.preload([:task, :break])
+
+        [reloaded_session | sessions]
+      end)
+
     {:noreply, socket}
   end
 
@@ -185,7 +209,7 @@ defmodule FlowTimerWeb.TimerLive do
     break_duration = Breaks.break_duration_till_end(break)
 
     if break_duration == 0 do
-      send(self(), :stop_break)
+      send(self(), {:stop_break, break.id})
     end
 
     break_duration

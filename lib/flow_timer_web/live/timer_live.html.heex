@@ -104,9 +104,11 @@
         <div class="grow truncate"><%= session.task.title || "No title" %></div>
         <div class="flex-none w-44">
           <%= timer_from_session(session) %>
-          <span class="text-xs text-gray-500">
-            (break <%= timer_from_break_duration(session.break) %>)
-          </span>
+          <%= if session.break && session.break.finished do %>
+            <span class="text-xs text-gray-500">
+              (break <%= timer_from_break_duration(session.break) %>)
+            </span>
+          <% end %>
         </div>
         <div class="flex-none w-32">
           <a
