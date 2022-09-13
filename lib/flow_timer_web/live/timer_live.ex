@@ -97,7 +97,7 @@ defmodule FlowTimerWeb.TimerLive do
                focus_session_id: focus_session.id,
                finished_at: NaiveDateTime.add(now, minutes * 60)
              }) do
-        session = FlowTimer.Repo.preload(focus_session, :task)
+        session = FlowTimer.Repo.preload(focus_session, [:task, :break])
 
         assign(socket,
           focus_session: nil,
@@ -199,6 +199,8 @@ defmodule FlowTimerWeb.TimerLive do
     |> FocusSessions.session_duration()
     |> timer_from_duration()
   end
+
+  defp timer_from_break_duration(nil), do: nil
 
   defp timer_from_break_duration(break) do
     break

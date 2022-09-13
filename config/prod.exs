@@ -10,7 +10,9 @@ import Config
 # which you should run after static files are built and
 # before starting your production server.
 config :flow_timer, FlowTimerWeb.Endpoint,
-  cache_static_manifest: "priv/static/cache_manifest.json"
+  cache_static_manifest: "priv/static/cache_manifest.json",
+  check_origin: ["https://flowtimer.app"],
+  url: [host: "flowtimer.app"]
 
 # Do not print debug messages in production
 config :logger, level: :info
