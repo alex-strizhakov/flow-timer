@@ -1,14 +1,25 @@
 # FlowTimer
 
-To start your Phoenix server:
+Timer application to work in Flow and do short breaks between focus sessions.
 
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.setup`
-  * Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
+https://flowtimer.app
+
+## Contributing
+
+You can start developing locally in a few steps:
+1. Copy this repo via git clone https://github.com/alex-strizhakov/flow-timer or by downloading it
+2. `cd flow_timer`
+3. Install dependencies with `mix deps.get`
+4. Create and migrate your database with `mix ecto.setup`
+5. Start Phoenix endpoint with `mix phx.server` or inside IEx with `iex -S mix phx.server`
 
 Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
+## Copyright and License
+
+Copyright (c) 2022, Alexander Strizhakov.
+
+Phoenix source code is licensed under the [MIT License](LICENSE.md).
 
 ## Learn more
 
