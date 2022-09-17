@@ -90,8 +90,15 @@
                 <%= link("Timer",
                   to: Routes.live_path(FlowTimerWeb.Endpoint, FlowTimerWeb.TimerLive),
                   class:
-                    "text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
+                  "text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium"
                 ) %>
+                <%= link("Source",
+                  to: "https://github.com/alex-strizhakov/flow-timer",
+                  class:
+                  "text-gray-300 hover:bg-gray-700 hover:text-white px-3 py-2 rounded-md text-sm font-medium",
+                  target: "_blank"
+                ) %>
+
               </div>
             </div>
           </div>
