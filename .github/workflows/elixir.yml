@@ -10,12 +10,22 @@ permissions:
   contents: read
 
 jobs:
-  build:
-
-    name: Build and test
+  test:
     runs-on: ubuntu-latest
-
-    steps:
+    services:
+    postgres:
+      image: postgres:14
+      env:
+        POSTGRES_USER: postgres
+        POSTGRES_PASSWORD: postgres
+        POSTGRES_DB: flow_timer_test
+      ports:
+        - 5432:5432
+      options: --health-cmd pg_isready --health-interval 10s --health-timeout 5s --health-retries 5
+  env:
+    MIX_ENV: test
+    GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  steps:
     - uses: actions/checkout@v3
     - name: Set up Elixir
       uses: erlef/setup-beam@988e02bfe678367a02564f65ca2e37726dc0268f
@@ -28,7 +38,7 @@ jobs:
         path: deps
         key: ${{ runner.os }}-mix-${{ hashFiles('**/mix.lock') }}
         restore-keys: ${{ runner.os }}-mix-
-    - name: Install dependencies
-      run: mix deps.get
-    - name: Run tests
-      run: mix test
+    - run: mix local.rebar --force
+    - run: mix local.hex --force
+    - run: mix deps.get
+    - run: mix test
