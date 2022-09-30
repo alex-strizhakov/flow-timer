@@ -19,7 +19,7 @@ Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
 
 Copyright (c) 2022, Alexander Strizhakov.
 
-Phoenix source code is licensed under the [MIT License](LICENSE.md).
+Flowtimer source code is licensed under the [MIT License](LICENSE.md).
 
 ## Learn more
 
