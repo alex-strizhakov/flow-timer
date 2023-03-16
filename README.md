@@ -2,8 +2,6 @@
 
 Timer application to work in Flow and do short breaks between focus sessions.
 
-https://flowtimer.app
-
 ## Contributing
 
 You can start developing locally in a few steps:
